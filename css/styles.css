@@ -40,9 +40,19 @@ th{
 }
 */
 
+.data1{
+    width: 50%;
+}
+.data2{
+    width: 25%;
+}
+.data3{
+    width: 25%;
+}
+
 .tt {
     position: relative;
-    display: flex;
+    display: table;
     width: 100%;
 }
 

@@ -70,14 +70,17 @@ function go(){
 
 			var nodeTd = document.createElement("td");
 			nodeTd.id = "td1"+i;
+			nodeTd.classList.add("data1");
 			document.getElementById("tr"+i).appendChild(nodeTd);
 
 			var nodeTd = document.createElement("td");
 			nodeTd.id = "td2"+i;
+			nodeTd.classList.add("data2");
 			document.getElementById("tr"+i).appendChild(nodeTd);
 
 			var nodeTd = document.createElement("td");
 			nodeTd.id = "td3"+i;
+			nodeTd.classList.add("data3");
 			document.getElementById("tr"+i).appendChild(nodeTd);
 
 			var nodeImg = document.createElement("img");
