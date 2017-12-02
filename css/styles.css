@@ -1,0 +1,80 @@
+table {
+    width:80%;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table#t01 tr:nth-child(even) {
+    background-color: #eee;
+}
+table#t01 tr:nth-child(odd) {
+   background-color:#fff;
+}
+table#t01 th {
+    background-color: black;
+    color: white;
+}
+
+th{
+    text-align:center;
+}
+/*
+.tt:hover .ttt {
+    display: block;
+}
+.ttt {
+    display: none;
+    background: #C8C8C8;
+    position: absolute;
+    z-index: 1000;
+    width:99px;
+    height:146px;
+}
+.tt {
+    margin:10px;
+}
+*/
+
+.tt {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.tt .ttt {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.tt .ttt::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tt:hover .ttt {
+    visibility: visible;
+    opacity: 1;
+}

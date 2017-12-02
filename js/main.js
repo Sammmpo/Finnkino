@@ -1,10 +1,21 @@
 var arrayOfShows = [];
+var areaID;
 
-function show(id, title, theatre) {
+// var tooltip = document.querySelectorAll('.ttt');
+// document.addEventListener('mousemove', fn, false);
+// function fn(e) {
+//     for (var i=tooltip.length; i--;) {
+//         tooltip[i].style.left = e.pageX + 'px';
+//         tooltip[i].style.top = e.pageY + 'px';
+//     }
+// }
+
+function show(id, title, theatre, showStart, image) {
 	this.id = id; //int
 	this.title = title; //string
-	this.theatre = theatre; //string
-	//this.dttmShowStart = dttmShowStart; //string
+	this.theatre = theatre; //int
+	this.showStart = showStart; //string
+	this.image = image; //stringlink
 }
 
 var apiTheatreAreas = new XMLHttpRequest();
@@ -14,15 +25,13 @@ apiTheatreAreas.onreadystatechange=function() {
   if (apiTheatreAreas.readyState==4 && apiTheatreAreas.status==200){
 	var xmlDoc = apiTheatreAreas.responseXML; 
 	
-	var theatre = xmlDoc.getElementsByTagName("ID");
+	var areaIDs = xmlDoc.getElementsByTagName("ID");
 	var theatreNames = xmlDoc.getElementsByTagName("Name");
-	nodeSelect = document.getElementById("selection");
-	nodeSelect.id = "theatre";
+	var nodeSelect = document.getElementById("area");
 		
 	for (let i = 0; i < theatreNames.length; i++){
 		var nodeOption = document.createElement("option");
-		//nodeOption.value = theatre[i].firstChild.data;
-		nodeOption.value = theatreNames[i].firstChild.data
+		nodeOption.value = areaIDs[i].firstChild.data;
 		var nodeText = document.createTextNode(theatreNames[i].firstChild.data);
 		nodeSelect.appendChild(nodeOption);
 		nodeOption.appendChild(nodeText);
@@ -31,46 +40,76 @@ apiTheatreAreas.onreadystatechange=function() {
   }
 }
 
-var apiSchedule = new XMLHttpRequest();
-apiSchedule.open("GET","http://www.finnkino.fi/xml/Schedule/",true);
-apiSchedule.send();
-apiSchedule.onreadystatechange=function() {
-  if (apiSchedule.readyState==4 && apiSchedule.status==200){
-	var xmlDoc = apiSchedule.responseXML;
-	
-	var showIDs = xmlDoc.getElementsByTagName("ID");
-	//console.log(showIDs);
-	var showTitles = xmlDoc.getElementsByTagName("Title");
-	//console.log(showTitles);
-	var showTheatre = xmlDoc.getElementsByTagName("Theatre");
-	//console.log(showTheatreIds);
+go();
+function go(){
+	arrayOfShows = [];
+	console.log(document.getElementById("area").value);
+	areaID = document.getElementById("area").value;
+	var apiSchedule = new XMLHttpRequest();
+	apiSchedule.open("GET","http://www.finnkino.fi/xml/Schedule/?area="+areaID,true);
+	apiSchedule.send();
+	apiSchedule.onreadystatechange=function() {
+		if (apiSchedule.readyState==4 && apiSchedule.status==200){
+		var xmlDoc = apiSchedule.responseXML;
+		
+		var showIDs = xmlDoc.getElementsByTagName("ID");
+		var showTitles = xmlDoc.getElementsByTagName("Title");
+		var showTheatre = xmlDoc.getElementsByTagName("Theatre");
+		var showShowStarts = xmlDoc.getElementsByTagName("dttmShowStart");
+		var showImages = xmlDoc.getElementsByTagName("EventLargeImagePortrait");
 
-	for (let i = 0; i < showIDs.length; i++){
-		var newShow = new show(showIDs[i].innerHTML, showTitles[i].innerHTML, showTheatre[i].innerHTML);
-		console.log(newShow); // print each show to the console.
-		arrayOfShows.push(newShow);
-	}
-	console.log(arrayOfShows);
-  }
-}
+		var nodeTable = document.getElementById("shows");
+		nodeTable.innerHTML = "<thead><tr><th colspan='3'>Shows</th></tr></thead>";
 
-// vain ESPOO:Sello toimii, voisiko olla koska näyttää vain 132, ja Sello on yksi näistä?
+		for (let i = 0; i < showIDs.length; i++){
+			
+			var nodeTr = document.createElement("tr");
+			nodeTr.id = "tr"+i;
+			nodeTr.classList.add("tt");
+			nodeTable.appendChild(nodeTr);
 
-function goButton(){
-	console.log("button pressed");
-	console.log(document.getElementById("theatre").value);
-	document.getElementById("shows").innerHTML = ""; // Reset the element.
-	var selectedTheater = document.getElementById("theatre").value;
-	for (let i = 0; i < arrayOfShows.length; i++){
-		if (arrayOfShows[i].theatre == selectedTheater){ //only print shows happening at selected theater.
-			document.getElementById("shows").innerHTML += arrayOfShows[i].title;
-			document.getElementById("shows").innerHTML += " ";
-			document.getElementById("shows").innerHTML += arrayOfShows[i].theatre;
-			document.getElementById("shows").innerHTML += "<br>";
+			var nodeTd = document.createElement("td");
+			nodeTd.id = "td1"+i;
+			document.getElementById("tr"+i).appendChild(nodeTd);
+
+			var nodeTd = document.createElement("td");
+			nodeTd.id = "td2"+i;
+			document.getElementById("tr"+i).appendChild(nodeTd);
+
+			var nodeTd = document.createElement("td");
+			nodeTd.id = "td3"+i;
+			document.getElementById("tr"+i).appendChild(nodeTd);
+
+			var nodeImg = document.createElement("img");
+			nodeImg.classList.add("ttt");
+			nodeImg.src = showImages[i].innerHTML;
+			document.getElementById("td1"+i).appendChild(nodeImg);
+		}
+
+		for (let i = 0; i < showIDs.length; i++){
+			var newShow = new show(showIDs[i].innerHTML, showTitles[i].innerHTML, showTheatre[i].innerHTML, showShowStarts[i].innerHTML, showImages[i].innerHTML);
+			console.log(newShow); // print each show to the console.
+			arrayOfShows.push(newShow);
+
+			var nodeTdText = document.createTextNode(showTitles[i].innerHTML);
+			document.getElementById("td1"+i).appendChild(nodeTdText);
+
+			var nodeTdText = document.createTextNode(showTheatre[i].innerHTML);
+			document.getElementById("td2"+i).appendChild(nodeTdText);
+
+			var nodeTdText = document.createTextNode(showShowStarts[i].innerHTML);
+			document.getElementById("td3"+i).appendChild(nodeTdText);
+		}
+
+		console.log(arrayOfShows);
+
 		}
 
 		
 	}
+
+
+
 }
 
 
