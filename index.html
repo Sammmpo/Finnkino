@@ -3,27 +3,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Open Data</title>
+  <title>Finnkino</title>
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
 
-    <div class="tt">First Link
-        <span class="ttt">Content 1</span>
-    </div>
-    
-    <div class="tt">Second Link
-      <img class="ttt" src="http://media.finnkino.fi/1012/Event_7844/portrait_large/Winnie_the_Pooh_99.jpg">
-    </div>
+<div class="centered">
 
-<br>
+  <h1>FINNKINO APP</h1>
+  <select id="area" class="selection" onchange="go()"></select>
+  <br><br>
+  <table id="shows"></table>
 
+</div>
 
-<select id="area" onchange="go()"></select>
-<br>
-
-<table id="shows"></table>
 
   <script src="js/main.js"></script>
 </body>

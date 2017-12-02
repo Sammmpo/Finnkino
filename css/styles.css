@@ -1,5 +1,30 @@
+.centered{
+    width: 90%;
+    margin: 0 auto;
+    text-align:center;
+}
+
+body{
+    background-image: url("https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/moving-through-stars-in-space_-1zccenlb__F0000.png");
+}
+
+h1{
+    font-family: verdana;
+    color: yellow;
+}
+
+.selection{
+    border-width: thick;
+    background-color: -webkit-linear-gradient(left top, grey, lightblue);
+    background-color: -o-linear-gradient(bottom right, grey, lightblue);
+    background-color: -moz-linear-gradient(bottom right, grey, lightblue);
+    background-color: linear-gradient(to bottom right, grey, lightblue);
+    font-family: verdana;
+}
+
 table {
-    width:80%;
+    width:100%;
+    font-family: verdana;
 }
 table, th, td {
     border: 1px solid black;
@@ -8,6 +33,10 @@ table, th, td {
 th, td {
     padding: 5px;
     text-align: left;
+    background: -webkit-linear-gradient(left top, lightblue, white);
+    background: -o-linear-gradient(bottom right, lightblue, white);
+    background: -moz-linear-gradient(bottom right, lightblue, white);
+    background: linear-gradient(to bottom right, lightblue, white);
 }
 table#t01 tr:nth-child(even) {
     background-color: #eee;
@@ -22,23 +51,11 @@ table#t01 th {
 
 th{
     text-align:center;
+    background: -webkit-linear-gradient(left top, grey, lightblue);
+    background: -o-linear-gradient(bottom right, grey, lightblue);
+    background: -moz-linear-gradient(bottom right, grey, lightblue);
+    background: linear-gradient(to bottom right, grey, lightblue);
 }
-/*
-.tt:hover .ttt {
-    display: block;
-}
-.ttt {
-    display: none;
-    background: #C8C8C8;
-    position: absolute;
-    z-index: 1000;
-    width:99px;
-    height:146px;
-}
-.tt {
-    margin:10px;
-}
-*/
 
 .data1{
     width: 50%;
@@ -59,7 +76,7 @@ th{
 .tt .ttt {
     visibility: hidden;
     width: 120px;
-    background-color: #555;
+    background-color: black;
     color: #fff;
     text-align: center;
     border-radius: 6px;
@@ -67,10 +84,11 @@ th{
     position: absolute;
     z-index: 1;
     bottom: 125%;
+    top: -70px;
     left: 50%;
     margin-left: -60px;
     opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0.5s;
 }
 
 .tt .ttt::after {
@@ -81,10 +99,12 @@ th{
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: #555 transparent transparent transparent;
+    border-color: black transparent transparent transparent;
 }
 
 .tt:hover .ttt {
     visibility: visible;
     opacity: 1;
 }
+
+

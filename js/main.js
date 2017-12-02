@@ -59,7 +59,7 @@ function go(){
 		var showImages = xmlDoc.getElementsByTagName("EventLargeImagePortrait");
 
 		var nodeTable = document.getElementById("shows");
-		nodeTable.innerHTML = "<thead><tr><th colspan='3'>Shows</th></tr></thead>";
+		nodeTable.innerHTML = "<thead><tr><th colspan='3'>Näytökset</th></tr></thead>";
 
 		for (let i = 0; i < showIDs.length; i++){
 			
