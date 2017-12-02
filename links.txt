@@ -1,0 +1,2 @@
+http://www.finnkino.fi/xml/TheatreAreas/
+http://www.finnkino.fi/xml/Schedule/
