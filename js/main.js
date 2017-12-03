@@ -1,21 +1,12 @@
 var arrayOfShows = [];
 var areaID;
 
-// var tooltip = document.querySelectorAll('.ttt');
-// document.addEventListener('mousemove', fn, false);
-// function fn(e) {
-//     for (var i=tooltip.length; i--;) {
-//         tooltip[i].style.left = e.pageX + 'px';
-//         tooltip[i].style.top = e.pageY + 'px';
-//     }
-// }
-
 function show(id, title, theatre, showStart, image) {
 	this.id = id; //int
 	this.title = title; //string
 	this.theatre = theatre; //int
 	this.showStart = showStart; //string
-	this.image = image; //stringlink
+	this.image = image; //string,url
 }
 
 var apiTheatreAreas = new XMLHttpRequest();
@@ -40,7 +31,7 @@ apiTheatreAreas.onreadystatechange=function() {
   }
 }
 
-go();
+go(); //autorun on launch.
 function go(){
 	arrayOfShows = [];
 	console.log(document.getElementById("area").value);
@@ -65,6 +56,7 @@ function go(){
 			
 			var nodeTr = document.createElement("tr");
 			nodeTr.id = "tr"+i;
+			nodeTr.onclick = function(){ bounce(this.id); }
 			nodeTr.classList.add("tt");
 			nodeTable.appendChild(nodeTr);
 
@@ -102,17 +94,41 @@ function go(){
 
 			var nodeTdText = document.createTextNode(showShowStarts[i].innerHTML);
 			document.getElementById("td3"+i).appendChild(nodeTdText);
+
+			
+			$(document).ready(function() {
+				$("#tr"+i).fadeOut( 0, function(){ 
+					$(".log").text('Fade In Transition Complete');
+				 });	
+			});
+			
+		}
+
+		var counter = 0;
+		for (let i = 0; i < showIDs.length; i++){
+			counter += 1;
+			myTimeout = setTimeout(function() {
+				$(document).ready(function() {	
+					$("#tr"+i).fadeIn( 'slow', function(){ 
+						$(".log").text('Fade In Transition Complete');
+					 });
+				});
+			}, counter * 25);
 		}
 
 		console.log(arrayOfShows);
 
-		}
 
-		
+
+		}	
 	}
 
+}
 
-
+function bounce(id){
+		$(document).ready(function() {	
+			$( "#"+id ).effect( "bounce", {times:3}, 300 );
+		});
 }
 
 
