@@ -35,7 +35,7 @@ apiTheatreAreas.onreadystatechange=function() {
 
 function search() {
     var input, filter, table, row, a; //setting up variables.
-    searchInput = document.getElementById("search").value; //reads input from HTML.
+    searchInput = document.getElementById("searchField").value; //reads input from HTML.
     filter = searchInput.toUpperCase(); //removes case-sensitivy.
 	table = document.getElementById("shows");
 	rows = table.getElementsByTagName("tr");
@@ -51,8 +51,8 @@ function search() {
 
 go(); //autorun on launch.
 function go(){ //display table.
-	document.getElementById("search").disabled = true; // Disable searching while fades fx is still rolling to avoid bugs.
-	document.getElementById("search").value = ""; // Reset search when changing area.
+	document.getElementById("searchField").disabled = true; // Disable searching while fades fx is still rolling to avoid bugs.
+	document.getElementById("searchField").value = ""; // Reset search when changing area.
 	search(); // rerun search, basically resets search.
 	arrayOfShows = []; // reset arrayOfShows.
 	console.log(document.getElementById("area").value);
@@ -148,7 +148,7 @@ function go(){ //display table.
 
 		// Allows searching after fades are done.
 		var canSearch = setTimeout(function() {
-			document.getElementById("search").disabled = false;
+			document.getElementById("searchField").disabled = false;
 		}, showIDs.length * 25);
 
 		console.log(arrayOfShows);
