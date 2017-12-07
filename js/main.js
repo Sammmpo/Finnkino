@@ -120,7 +120,13 @@ function go(){ //display table.
 			var nodeTdText = document.createTextNode(showTheatre[i].innerHTML);
 			document.getElementById("td2"+i).appendChild(nodeTdText);
 
-			var nodeTdText = document.createTextNode(showShowStarts[i].innerHTML);
+			//Alternative: Display both day and hours with ", " separator.
+			//var day = showShowStarts[i].innerHTML.substring(0, showShowStarts[i].innerHTML.indexOf("T"));
+			//var hours = showShowStarts[i].innerHTML.substring(showShowStarts[i].innerHTML.indexOf("T")+1, showShowStarts[i].innerHTML.length);
+			//var nodeTdText = document.createTextNode(day+", "+hours);
+
+			// Read only hours from date and add it to the table row.
+			var nodeTdText = document.createTextNode(showShowStarts[i].innerHTML.substring(showShowStarts[i].innerHTML.indexOf("T")+1,showShowStarts[i].innerHTML.length));
 			document.getElementById("td3"+i).appendChild(nodeTdText);
 
 			
