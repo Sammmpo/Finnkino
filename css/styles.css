@@ -13,12 +13,9 @@ h1{
     color: yellow;
 }
 
-.selection{
+.borders{
     border-width: thick;
-    background-color: -webkit-linear-gradient(left top, grey, lightblue);
-    background-color: -o-linear-gradient(bottom right, grey, lightblue);
-    background-color: -moz-linear-gradient(bottom right, grey, lightblue);
-    background-color: linear-gradient(to bottom right, grey, lightblue);
+    border-color: #3498db;
     font-family: verdana;
 }
 
