@@ -1,19 +1,20 @@
-var arrayOfShows = [];
+var arrayOfShows = []; //set up an array for storing show objects.
 var areaID; //user's selection in dropdown menu.
 var searchInput; //user input for search field.
 
-function show(id, title, theatre, showStart, image) {
+function show(id, title, theatre, showStart, image) { //constructor for show object.
 	this.setProperty("id", id, 0);
 	this.setProperty("title", title, "Elokuvan nimi ei saatavilla");
 	this.setProperty("theatre", theatre, "Teatterin nimi ei saatavilla");
 	this.setProperty("showStart", showStart, "Alkamisaika ei saatavilla");
 	this.setProperty("image", image, "img/noImage.jpg");
 }
-show.prototype.setProperty = function setProperty(key, value, defaultValue){
-	if (value !== undefined){
+show.prototype.setProperty = function setProperty(key, value, defaultValue){ //added function to the constructor.
+	if (value !== undefined){ //undefined means that the tag is missing in Finnkino XML.
 		this[key] = value;
 	} else {
 		this[key] = defaultValue;
+		console.log("Missing XML tag in Finnkino API, used default value instead.");
 	}
 }
 
