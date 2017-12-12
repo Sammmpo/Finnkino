@@ -1,13 +1,20 @@
-var arrayOfShows = []; //This is quite useless because there are showIDs-array.
+var arrayOfShows = [];
 var areaID; //user's selection in dropdown menu.
 var searchInput; //user input for search field.
 
 function show(id, title, theatre, showStart, image) {
-	this.id = id; //int
-	this.title = title; //string
-	this.theatre = theatre; //int
-	this.showStart = showStart; //string
-	this.image = image; //string(url)
+	this.setProperty("id", id, 0);
+	this.setProperty("title", title, "Elokuvan nimi ei saatavilla");
+	this.setProperty("theatre", theatre, "Teatterin nimi ei saatavilla");
+	this.setProperty("showStart", showStart, "Alkamisaika ei saatavilla");
+	this.setProperty("image", image, "img/noImage.jpg");
+}
+show.prototype.setProperty = function setProperty(key, value, defaultValue){
+	if (value !== undefined){
+		this[key] = value;
+	} else {
+		this[key] = defaultValue;
+	}
 }
 
 // Add all dropdown options to the area selection.
@@ -49,6 +56,42 @@ function search() {
     }
 }
 
+// Convert XML to JSON.
+function xmlToJson(xml) {
+	// Create the return object
+	var obj = {};
+	if (xml.nodeType == 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+		obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	} else if (xml.nodeType == 3) { // text
+		obj = xml.nodeValue;
+	}
+	// do children
+	if (xml.hasChildNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+			if (typeof(obj[nodeName]) == "undefined") {
+				obj[nodeName] = xmlToJson(item);
+			} else {
+				if (typeof(obj[nodeName].push) == "undefined") {
+					var old = obj[nodeName];
+					obj[nodeName] = [];
+					obj[nodeName].push(old);
+				}
+				obj[nodeName].push(xmlToJson(item));
+			}
+		}
+	}
+	return obj;
+};
+
 go(); //autorun on launch.
 function go(){ //display table.
 	document.getElementById("searchField").disabled = true; // Disable searching while fades fx is still rolling to avoid bugs.
@@ -63,19 +106,26 @@ function go(){ //display table.
 	apiSchedule.onreadystatechange=function() {
 		if (apiSchedule.readyState==4 && apiSchedule.status==200){
 		var xmlDoc = apiSchedule.responseXML;
+		var jsonObj = xmlToJson(xmlDoc);
+		console.log(jsonObj);
 		
-		// Create arrays for different show information.
-		var showIDs = xmlDoc.getElementsByTagName("ID");
-		var showTitles = xmlDoc.getElementsByTagName("Title");
-		var showTheatre = xmlDoc.getElementsByTagName("Theatre");
-		var showShowStarts = xmlDoc.getElementsByTagName("dttmShowStart");
-		var showImages = xmlDoc.getElementsByTagName("EventLargeImagePortrait");
+		for (let i = 0; i < jsonObj.Schedule.Shows.Show.length; i++){
+			var newShow = new show( //create show object.
+				jsonObj.Schedule.Shows.Show[i].ID["#text"],
+				jsonObj.Schedule.Shows.Show[i].Title["#text"],
+				jsonObj.Schedule.Shows.Show[i].Theatre["#text"],
+				jsonObj.Schedule.Shows.Show[i].dttmShowStart["#text"],
+				jsonObj.Schedule.Shows.Show[i].Images.EventLargeImagePortrait["#text"]
+			);
+			arrayOfShows.push(newShow); //add show object to array.
+		}
+		console.log(arrayOfShows);
 
 		// Add tablehead to the table.
 		var nodeTable = document.getElementById("shows");
 		nodeTable.innerHTML = "<thead><tr><th colspan='3'>Näytökset</th></tr></thead>";
 
-		for (let i = 0; i < showIDs.length; i++){ //construct rows for the table.
+		for (let i = 0; i < arrayOfShows.length; i++){ //construct rows for the table.
 			
 			var nodeTr = document.createElement("tr");
 			nodeTr.id = "tr"+i;
@@ -100,7 +150,7 @@ function go(){ //display table.
 
 			var nodeImg = document.createElement("img");
 			nodeImg.classList.add("ttt");
-			nodeImg.src = showImages[i].innerHTML;
+			nodeImg.src = arrayOfShows[i].image;
 			document.getElementById("td1"+i).appendChild(nodeImg);
 
 			var nodeA = document.createElement("a"); //We need text inside own tag for search function.
@@ -108,27 +158,17 @@ function go(){ //display table.
 			document.getElementById("td1"+i).appendChild(nodeA);
 		}
 
-		for (let i = 0; i < showIDs.length; i++){ //This adds content to the table rows.
-			// the following line goes wrong if Finnkino XML has missing image tags.
-			var newShow = new show(showIDs[i].innerHTML, showTitles[i].innerHTML, showTheatre[i].innerHTML, showShowStarts[i].innerHTML, showImages[i].innerHTML);
-			console.log(newShow); // print each show to the console.
-			arrayOfShows.push(newShow);
+		for (let i = 0; i < arrayOfShows.length; i++){ //This adds content to the table rows.
 
-			var nodeTdText = document.createTextNode(showTitles[i].innerHTML);
+			var nodeTdText = document.createTextNode(arrayOfShows[i].title);
 			document.getElementById("a"+i).appendChild(nodeTdText);
 
-			var nodeTdText = document.createTextNode(showTheatre[i].innerHTML);
+			var nodeTdText = document.createTextNode(arrayOfShows[i].theatre);
 			document.getElementById("td2"+i).appendChild(nodeTdText);
 
-			//Alternative: Display both day and hours with ", " separator.
-			//var day = showShowStarts[i].innerHTML.substring(0, showShowStarts[i].innerHTML.indexOf("T"));
-			//var hours = showShowStarts[i].innerHTML.substring(showShowStarts[i].innerHTML.indexOf("T")+1, showShowStarts[i].innerHTML.length);
-			//var nodeTdText = document.createTextNode(day+", "+hours);
-
 			// Read only hours from date and add it to the table row.
-			var nodeTdText = document.createTextNode(showShowStarts[i].innerHTML.substring(showShowStarts[i].innerHTML.indexOf("T")+1,showShowStarts[i].innerHTML.length));
+			var nodeTdText = document.createTextNode(arrayOfShows[i].showStart.substring(arrayOfShows[i].showStart.indexOf("T")+1,arrayOfShows[i].showStart.length));
 			document.getElementById("td3"+i).appendChild(nodeTdText);
-
 			
 			//Instantly fade out all rows so that they can be faded in one by one.
 			$(document).ready(function() {
@@ -141,7 +181,7 @@ function go(){ //display table.
 
 		// Fade in all rows one by one.
 		var counter = 0;
-		for (let i = 0; i < showIDs.length; i++){
+		for (let i = 0; i < arrayOfShows.length; i++){
 			counter += 1;
 			myTimeout = setTimeout(function() {
 				$(document).ready(function() {	
@@ -155,9 +195,9 @@ function go(){ //display table.
 		// Allows searching after fades are done.
 		var canSearch = setTimeout(function() {
 			document.getElementById("searchField").disabled = false;
-		}, showIDs.length * 25);
+		}, arrayOfShows.length * 25);
 
-		console.log(arrayOfShows);
+		//console.log(arrayOfShows);
 
 
 		}	
