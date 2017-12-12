@@ -7,6 +7,7 @@ App requesting data from Finnkino servers.
 
 Known bugs
 
-- During Tuesdays (needs confirmation), Finnkino changes images for their events. During this time if there are missing image tags in their XML API the app may not function properly. In this case, the app displays same-sized image with text "No Image".
+- During Tuesdays (missing confirmation), Finnkino changes images for their events. During this time if there are missing image tags in their XML API the app may not function properly. In this case, the app displays same-sized image with text "No Image".
+- If the user changes their Area selection rapidly without letting the fade in animation play over, the application displays shows from both areas regardless of what was the most recent selection.
 
 
