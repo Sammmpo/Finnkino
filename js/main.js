@@ -1,6 +1,13 @@
 var arrayOfShows = []; //set up an array for storing show objects.
+var arrayOfFutureShows = []; //set up an array for storing show objects that are in the future.
 var areaID; //user's selection in dropdown menu.
 var searchInput; //user input for search field.
+
+var date = new Date();
+var currentHours = date.getHours();
+var currentMinutes = date.getMinutes();
+var currentTime = currentHours+""+currentMinutes;
+console.log("Current Time is: "+currentTime);
 
 function show(id, title, theatre, showStart, image) { //constructor for show object.
 	this.setProperty("id", id, 0);
@@ -98,8 +105,9 @@ function go(){ //display table.
 	document.getElementById("searchField").disabled = true; // Disable searching while fades fx is still rolling to avoid bugs.
 	document.getElementById("searchField").value = ""; // Reset search when changing area.
 	search(); // rerun search, basically resets search.
-	arrayOfShows = []; // reset arrayOfShows.
-	console.log(document.getElementById("area").value);
+	arrayOfShows = []; // reset.
+	arrayOfFutureShows = []; // reset.
+	console.log("User input: "+document.getElementById("area").value);
 	areaID = document.getElementById("area").value;
 	var apiSchedule = new XMLHttpRequest();
 	apiSchedule.open("GET","http://www.finnkino.fi/xml/Schedule/?area="+areaID,true);
@@ -108,6 +116,7 @@ function go(){ //display table.
 		if (apiSchedule.readyState==4 && apiSchedule.status==200){
 		var xmlDoc = apiSchedule.responseXML;
 		var jsonObj = xmlToJson(xmlDoc);
+		console.log("This is JSON Object:");
 		console.log(jsonObj);
 		
 		for (let i = 0; i < jsonObj.Schedule.Shows.Show.length; i++){
@@ -120,11 +129,26 @@ function go(){ //display table.
 			);
 			arrayOfShows.push(newShow); //add show object to array.
 		}
+		console.log("Shows happening today:");
 		console.log(arrayOfShows);
 
 		// Add tablehead to the table.
 		var nodeTable = document.getElementById("shows");
 		nodeTable.innerHTML = "<thead><tr><th colspan='3'>Näytökset</th></tr></thead>";
+
+		var arrayOfFutureShows = []; //Shows that are in the future.
+		for (let i = 0; i < arrayOfShows.length; i++){
+			var convertedHours = arrayOfShows[i].showStart.substring(arrayOfShows[i].showStart.indexOf("T")+1,arrayOfShows[i].showStart.indexOf("T")+3);
+			var convertedMinutes = arrayOfShows[i].showStart.substring(arrayOfShows[i].showStart.indexOf("T")+4,arrayOfShows[i].showStart.indexOf("T")+6);
+			var convertedStartTime = convertedHours+""+convertedMinutes;
+			if (convertedStartTime > currentTime){
+				arrayOfFutureShows.push(arrayOfShows[i]);
+			}
+		}
+		console.log("Shows happening later today:");
+		console.log(arrayOfFutureShows);
+
+		// arrayOfShows[i].showStart.indexOf("T")+1,arrayOfShows[i].showStart.length
 
 		for (let i = 0; i < arrayOfShows.length; i++){ //construct rows for the table.
 			
