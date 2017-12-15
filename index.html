@@ -16,7 +16,12 @@
   <select id="area" class="borders" onchange="go()"></select>
   <input id="searchField" onkeyup="search()" class="borders" type="text" disabled>
   <br><br>
-  <table id="shows"></table>
+  <label><span class="goldentext">Only Future Shows</span><input id="checkbox" onchange="go()" type="checkbox" disabled></label>
+  <br><br>
+  <table id="shows">
+    <thead><tr><th>Elokuva</th><th>Teatteri</th><th>Alkaa</th></tr></thead>
+    <tbody id="tableBody"></tbody>
+  </table>
 
 </div>
 

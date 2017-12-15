@@ -102,7 +102,10 @@ function xmlToJson(xml) {
 
 go(); //autorun on launch.
 function go(){ //display table.
-	document.getElementById("searchField").disabled = true; // Disable searching while fades fx is still rolling to avoid bugs.
+	// Disable input fields while fades fx is still rolling to avoid errors.
+	document.getElementById("searchField").disabled = true;
+	document.getElementById("area").disabled = true;
+	document.getElementById("checkbox").disabled = true;
 	document.getElementById("searchField").value = ""; // Reset search when changing area.
 	search(); // rerun search, basically resets search.
 	arrayOfShows = []; // reset.
@@ -134,8 +137,8 @@ function go(){ //display table.
 
 		// Add tablehead to the table.
 		var nodeTable = document.getElementById("shows");
-		nodeTable.innerHTML = "<thead><tr><th colspan='3'>Näytökset</th></tr></thead>";
-
+		var nodeTableBody = document.getElementById("tableBody"); 
+		nodeTableBody.innerHTML = "";
 		var arrayOfFutureShows = []; //Shows that are in the future.
 		for (let i = 0; i < arrayOfShows.length; i++){
 			var convertedHours = arrayOfShows[i].showStart.substring(arrayOfShows[i].showStart.indexOf("T")+1,arrayOfShows[i].showStart.indexOf("T")+3);
@@ -148,15 +151,20 @@ function go(){ //display table.
 		console.log("Shows happening later today:");
 		console.log(arrayOfFutureShows);
 
+		var checkbox = document.getElementById("checkbox");
+		if (checkbox.checked == true){
+			arrayOfShows = arrayOfFutureShows;
+		}
 		// arrayOfShows[i].showStart.indexOf("T")+1,arrayOfShows[i].showStart.length
 
 		for (let i = 0; i < arrayOfShows.length; i++){ //construct rows for the table.
 			
 			var nodeTr = document.createElement("tr");
 			nodeTr.id = "tr"+i;
-			nodeTr.onclick = function(){ bounce(this.id); } //Add bounce fx when clicking table rows.
+			//nodeTr.onclick = function(){ bounce(this.id); } //Add bounce fx when clicking table rows.
 			nodeTr.classList.add("tt");
-			nodeTable.appendChild(nodeTr);
+			nodeTr.colspan = 1;
+			nodeTableBody.appendChild(nodeTr);
 
 			var nodeTd = document.createElement("td");
 			nodeTd.id = "td1"+i;
@@ -173,15 +181,40 @@ function go(){ //display table.
 			nodeTd.classList.add("data3");
 			document.getElementById("tr"+i).appendChild(nodeTd);
 
+			var nodeSpan = document.createElement("span");
+			nodeSpan.id = "span"+i;
+			nodeSpan.classList.add("tooltip-span");
+			document.getElementById("tr"+i).appendChild(nodeSpan);
+
+			// var tooltipSpan = document.getElementsByClassName('tooltip-span');
+			// window.onmousemove = function (e) {
+			// 	var x = e.clientX,
+			// 		y = e.clientY;
+			// 	for (let i = 0; i < tooltipSpan.length; i++){
+			// 		tooltipSpan[i].style.top = (y + 20) + 'px';
+			// 		tooltipSpan[i].style.left = (x + 20) + 'px';
+			// 	}
+			// };
+
 			var nodeImg = document.createElement("img");
-			nodeImg.classList.add("ttt");
+			//nodeImg.classList.add("ttt");
 			nodeImg.src = arrayOfShows[i].image;
-			document.getElementById("td1"+i).appendChild(nodeImg);
+			document.getElementById("span"+i).appendChild(nodeImg);
 
 			var nodeA = document.createElement("a"); //We need text inside own tag for search function.
 			nodeA.id = "a"+i;
 			document.getElementById("td1"+i).appendChild(nodeA);
 		}
+		var tooltipSpan = document.getElementsByClassName('tooltip-span');
+		window.onmousemove = function (e) {
+			var x = e.clientX,
+				y = e.clientY;
+			for (let i = 0; i < tooltipSpan.length; i++){
+				tooltipSpan[i].style.top = (y + 20) + 'px';
+				tooltipSpan[i].style.left = (x + 20) + 'px';
+			}
+		};
+
 
 		for (let i = 0; i < arrayOfShows.length; i++){ //This adds content to the table rows.
 
@@ -220,6 +253,8 @@ function go(){ //display table.
 		// Allows searching after fades are done.
 		var canSearch = setTimeout(function() {
 			document.getElementById("searchField").disabled = false;
+			document.getElementById("area").disabled = false;
+			document.getElementById("checkbox").disabled = false;
 		}, arrayOfShows.length * 25);
 
 		//console.log(arrayOfShows);
@@ -231,10 +266,10 @@ function go(){ //display table.
 }
 
 //Unnecessary bounce effect to test jQuery.
-function bounce(id){
-		$(document).ready(function() {	
-			$( "#"+id ).effect( "bounce", {times:3}, 300 );
-		});
-}
+// function bounce(id){
+// 		$(document).ready(function() {	
+// 			$( "#"+id ).effect( "bounce", {times:3}, 300 );
+// 		});
+// }
 
 

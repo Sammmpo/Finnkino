@@ -5,17 +5,22 @@
 }
 
 body{
-    background-image: url("https://d2v9y0dukr6mq2.cloudfront.net/video/thumbnail/moving-through-stars-in-space_-1zccenlb__F0000.png");
+    background-color: #1d1d1d;
+}
+
+.goldentext{
+    font-family: verdana;
+    color: #ffc40d; 
 }
 
 h1{
     font-family: verdana;
-    color: yellow;
+    color: #ffc40d;
 }
 
 .borders{
     border-width: thick;
-    border-color: #3498db;
+    border-color: #ffc40d;
     font-family: verdana;
 }
 
@@ -30,10 +35,7 @@ table, th, td {
 th, td {
     padding: 5px;
     text-align: left;
-    background: -webkit-linear-gradient(left top, lightblue, white);
-    background: -o-linear-gradient(bottom right, lightblue, white);
-    background: -moz-linear-gradient(bottom right, lightblue, white);
-    background: linear-gradient(to bottom right, lightblue, white);
+    background: #ecf0f1;
 }
 table#t01 tr:nth-child(even) {
     background-color: #eee;
@@ -48,10 +50,7 @@ table#t01 th {
 
 th{
     text-align:center;
-    background: -webkit-linear-gradient(left top, grey, lightblue);
-    background: -o-linear-gradient(bottom right, grey, lightblue);
-    background: -moz-linear-gradient(bottom right, grey, lightblue);
-    background: linear-gradient(to bottom right, grey, lightblue);
+    background: #ffc40d;
 }
 
 .data1{
@@ -65,43 +64,19 @@ th{
 }
 
 .tt {
-    position: relative;
-    display: table;
-    width: 100%;
+    text-decoration:none;
+    position:relative;
 }
-
-.tt .ttt {
-    visibility: hidden;
-    width: 120px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    border-radius: 6px;
-    padding: 5px 0;
-    position: absolute;
-    z-index: 1;
-    bottom: 125%;
-    top: -70px;
-    left: 50%;
-    margin-left: -60px;
-    opacity: 0;
-    transition: opacity 0.5s;
+.tt span {
+    display:none;
 }
-
-.tt .ttt::after {
-    content: "";
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    margin-left: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black transparent transparent transparent;
+.tt:hover span {
+    display:block;
+    position:fixed;
+    overflow:hidden;
 }
-
-.tt:hover .ttt {
-    visibility: visible;
-    opacity: 1;
+.tooltip-span{
+    /* This class must exist because it is used in javascript. */
 }
 
 .target {
