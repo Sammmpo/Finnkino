@@ -13,12 +13,12 @@
 
   <h1>FINNKINO APP</h1>
 
-  <select id="area" class="borders" onchange="go()" disabled></select>
-  <select id="time" class="borders" onchange="go()" disabled></select>
+  <select id="area" class="borders" onchange="fillTable()" disabled></select>
+  <select id="time" class="borders" onchange="FillTable()" disabled></select>
   <input id="searchField" onkeyup="search()" class="borders" type="text" disabled>
   <br><br>
   <!--
-  <label><span class="goldentext">Only Future Shows</span><input id="checkbox" onchange="go()" type="checkbox" disabled></label>
+  <label><span class="goldentext">Only Future Shows</span><input id="checkbox" onchange="fillTable()" type="checkbox" disabled></label>
   <br><br>
     -->
   <table id="shows">

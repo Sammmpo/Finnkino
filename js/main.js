@@ -142,8 +142,8 @@ function disableInputToggle(asd){
 	}
 }
 
-go(); //autorun on launch.
-function go(){ //display table.
+fillTable(); //autorun on launch.
+function fillTable(){ //display table.
 	// Disable input fields while fades fx is still rolling to avoid errors.
 	disableInputToggle("disable");
 	document.getElementById("searchField").value = ""; // Reset search when changing area.
