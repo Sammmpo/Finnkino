@@ -162,8 +162,9 @@ function fillTable(){ //display table.
 		var jsonObj = xmlToJson(xmlDoc);
 		console.log("This is JSON Object:");
 		console.log(jsonObj);
-		if (jsonObj.Schedule.Shows.Show.length == null){
-			jsonObj.Schedule.Shows.Show.length = 0;
+		
+		if(!jsonObj.Schedule.Shows.Show) {
+			jsonObj.Schedule.Shows.Show = [];
 		}
 
 		for (let i = 0; i < jsonObj.Schedule.Shows.Show.length; i++){
