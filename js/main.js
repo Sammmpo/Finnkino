@@ -61,7 +61,7 @@ apiScheduleDates.onreadystatechange=function() {
 		
 	for (let i = 0; i < arrayOfTimes.length; i++){
 		var nodeOptionTime = document.createElement("option");
-		console.log(arrayOfTimes[i].firstChild.data.substring(0,10));
+		//console.log(arrayOfTimes[i].firstChild.data.substring(0,10));
 		var year = arrayOfTimes[i].firstChild.data.substring(0,4);
 		var month = arrayOfTimes[i].firstChild.data.substring(7,5);
 		var day = arrayOfTimes[i].firstChild.data.substring(10,8);
