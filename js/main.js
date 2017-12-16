@@ -204,7 +204,6 @@ function go(){ //display table.
 			
 			var nodeTr = document.createElement("tr");
 			nodeTr.id = "tr"+i;
-			//nodeTr.onclick = function(){ bounce(this.id); } //Add bounce fx when clicking table rows.
 			nodeTr.classList.add("tt");
 			nodeTr.colspan = 1;
 			nodeTableBody.appendChild(nodeTr);
@@ -287,20 +286,11 @@ function go(){ //display table.
 			disableInputToggle("enable");
 		}, arrayOfShows.length * 25);
 
-		//console.log(arrayOfShows);
-
 
 		}	
 		
 	}
 
 }
-
-//Unnecessary bounce effect to test jQuery.
-// function bounce(id){
-// 		$(document).ready(function() {	
-// 			$( "#"+id ).effect( "bounce", {times:3}, 300 );
-// 		});
-// }
 
 
