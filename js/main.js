@@ -2,6 +2,7 @@ var arrayOfShows = []; //set up an array for storing show objects.
 var arrayOfFutureShows = []; //set up an array for storing show objects that are in the future.
 var areaID; //user's selection in dropdown menu.
 var searchInput; //user input for search field.
+var timeInput; //the date the user is searching for.
 
 var date = new Date();
 var currentHours = date.getHours();
@@ -27,7 +28,7 @@ show.prototype.setProperty = function setProperty(key, value, defaultValue){ //a
 
 // Add all dropdown options to the area selection.
 var apiTheatreAreas = new XMLHttpRequest();
-apiTheatreAreas.open("GET","http://www.finnkino.fi/xml/TheatreAreas/",true);
+apiTheatreAreas.open("GET","https://www.finnkino.fi/xml/TheatreAreas/",true);
 apiTheatreAreas.send();
 apiTheatreAreas.onreadystatechange=function() {
   if (apiTheatreAreas.readyState==4 && apiTheatreAreas.status==200){
@@ -43,6 +44,32 @@ apiTheatreAreas.onreadystatechange=function() {
 		var nodeText = document.createTextNode(theatreNames[i].firstChild.data);
 		nodeSelect.appendChild(nodeOption);
 		nodeOption.appendChild(nodeText);
+	}
+	
+  }
+}
+
+var apiScheduleDates = new XMLHttpRequest();
+apiScheduleDates.open("GET","https://www.finnkino.fi/xml/ScheduleDates/",true);
+apiScheduleDates.send();
+apiScheduleDates.onreadystatechange=function() {
+  if (apiScheduleDates.readyState==4 && apiScheduleDates.status==200){
+	var xmlDoc = apiScheduleDates.responseXML; 
+	
+	var arrayOfTimes = xmlDoc.getElementsByTagName("dateTime");
+	var nodeSelectTime = document.getElementById("time");
+		
+	for (let i = 0; i < arrayOfTimes.length; i++){
+		var nodeOptionTime = document.createElement("option");
+		console.log(arrayOfTimes[i].firstChild.data.substring(0,10));
+		var year = arrayOfTimes[i].firstChild.data.substring(0,4);
+		var month = arrayOfTimes[i].firstChild.data.substring(7,5);
+		var day = arrayOfTimes[i].firstChild.data.substring(10,8);
+		var convertedDate = day+"."+month+"."+year;
+		nodeOptionTime.value = convertedDate;
+		var nodeText = document.createTextNode(convertedDate);
+		nodeSelectTime.appendChild(nodeOptionTime);
+		nodeOptionTime.appendChild(nodeText);
 	}
 	
   }
@@ -100,20 +127,34 @@ function xmlToJson(xml) {
 	return obj;
 };
 
+function disableInputToggle(asd){
+	if (asd == "enable"){
+		document.getElementById("searchField").disabled = false;
+		document.getElementById("area").disabled = false;
+		//document.getElementById("checkbox").disabled = false;
+		document.getElementById("time").disabled = false;
+	}
+	if (asd == "disable"){
+		document.getElementById("searchField").disabled = true;
+		document.getElementById("area").disabled = true;
+		//document.getElementById("checkbox").disabled = true;
+		document.getElementById("time").disabled = true;
+	}
+}
+
 go(); //autorun on launch.
 function go(){ //display table.
 	// Disable input fields while fades fx is still rolling to avoid errors.
-	document.getElementById("searchField").disabled = true;
-	document.getElementById("area").disabled = true;
-	document.getElementById("checkbox").disabled = true;
+	disableInputToggle("disable");
 	document.getElementById("searchField").value = ""; // Reset search when changing area.
 	search(); // rerun search, basically resets search.
 	arrayOfShows = []; // reset.
 	arrayOfFutureShows = []; // reset.
 	console.log("User input: "+document.getElementById("area").value);
 	areaID = document.getElementById("area").value;
+	timeInput = document.getElementById("time").value;
 	var apiSchedule = new XMLHttpRequest();
-	apiSchedule.open("GET","http://www.finnkino.fi/xml/Schedule/?area="+areaID,true);
+	apiSchedule.open("GET","https://www.finnkino.fi/xml/Schedule/?area="+areaID+"&dt="+timeInput,true);
 	apiSchedule.send();
 	apiSchedule.onreadystatechange=function() {
 		if (apiSchedule.readyState==4 && apiSchedule.status==200){
@@ -121,7 +162,10 @@ function go(){ //display table.
 		var jsonObj = xmlToJson(xmlDoc);
 		console.log("This is JSON Object:");
 		console.log(jsonObj);
-		
+		if (jsonObj.Schedule.Shows.Show.length == null){
+			jsonObj.Schedule.Shows.Show.length = 0;
+		}
+
 		for (let i = 0; i < jsonObj.Schedule.Shows.Show.length; i++){
 			var newShow = new show( //create show object.
 				jsonObj.Schedule.Shows.Show[i].ID["#text"],
@@ -151,11 +195,10 @@ function go(){ //display table.
 		console.log("Shows happening later today:");
 		console.log(arrayOfFutureShows);
 
-		var checkbox = document.getElementById("checkbox");
+		/*var checkbox = document.getElementById("checkbox");
 		if (checkbox.checked == true){
 			arrayOfShows = arrayOfFutureShows;
-		}
-		// arrayOfShows[i].showStart.indexOf("T")+1,arrayOfShows[i].showStart.length
+		}*/
 
 		for (let i = 0; i < arrayOfShows.length; i++){ //construct rows for the table.
 			
@@ -186,18 +229,7 @@ function go(){ //display table.
 			nodeSpan.classList.add("tooltip-span");
 			document.getElementById("tr"+i).appendChild(nodeSpan);
 
-			// var tooltipSpan = document.getElementsByClassName('tooltip-span');
-			// window.onmousemove = function (e) {
-			// 	var x = e.clientX,
-			// 		y = e.clientY;
-			// 	for (let i = 0; i < tooltipSpan.length; i++){
-			// 		tooltipSpan[i].style.top = (y + 20) + 'px';
-			// 		tooltipSpan[i].style.left = (x + 20) + 'px';
-			// 	}
-			// };
-
 			var nodeImg = document.createElement("img");
-			//nodeImg.classList.add("ttt");
 			nodeImg.src = arrayOfShows[i].image;
 			document.getElementById("span"+i).appendChild(nodeImg);
 
@@ -225,7 +257,7 @@ function go(){ //display table.
 			document.getElementById("td2"+i).appendChild(nodeTdText);
 
 			// Read only hours from date and add it to the table row.
-			var nodeTdText = document.createTextNode(arrayOfShows[i].showStart.substring(arrayOfShows[i].showStart.indexOf("T")+1,arrayOfShows[i].showStart.length));
+			var nodeTdText = document.createTextNode(arrayOfShows[i].showStart.substring(arrayOfShows[i].showStart.indexOf("T")+1,arrayOfShows[i].showStart.length-3));
 			document.getElementById("td3"+i).appendChild(nodeTdText);
 			
 			//Instantly fade out all rows so that they can be faded in one by one.
@@ -234,7 +266,7 @@ function go(){ //display table.
 					$(".log").text('Fade Out done');
 				 });	
 			});
-			
+		
 		}
 
 		// Fade in all rows one by one.
@@ -252,15 +284,14 @@ function go(){ //display table.
 
 		// Allows searching after fades are done.
 		var canSearch = setTimeout(function() {
-			document.getElementById("searchField").disabled = false;
-			document.getElementById("area").disabled = false;
-			document.getElementById("checkbox").disabled = false;
+			disableInputToggle("enable");
 		}, arrayOfShows.length * 25);
 
 		//console.log(arrayOfShows);
 
 
 		}	
+		
 	}
 
 }

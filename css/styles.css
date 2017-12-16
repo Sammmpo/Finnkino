@@ -34,7 +34,7 @@ table, th, td {
 }
 th, td {
     padding: 5px;
-    text-align: left;
+    text-align: center;
     background: #ecf0f1;
 }
 table#t01 tr:nth-child(even) {
