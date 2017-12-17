@@ -10,12 +10,13 @@ var currentMinutes = date.getMinutes();
 var currentTime = currentHours+""+currentMinutes;
 console.log("Current Time is: "+currentTime);
 
-function show(id, title, theatre, showStart, image) { //constructor for show object.
+function show(id, title, theatre, showStart, image, link) { //constructor for show object.
 	this.setProperty("id", id, 0);
 	this.setProperty("title", title, "Elokuvan nimi ei saatavilla");
 	this.setProperty("theatre", theatre, "Teatterin nimi ei saatavilla");
 	this.setProperty("showStart", showStart, "Alkamisaika ei saatavilla");
 	this.setProperty("image", image, "img/noImage.jpg");
+	this.setProperty("link", link, window.location.href);
 }
 show.prototype.setProperty = function setProperty(key, value, defaultValue){ //added function to the constructor.
 	if (value !== undefined){ //undefined means that the tag is missing in Finnkino XML.
@@ -173,7 +174,8 @@ function fillTable(){ //display table.
 				jsonObj.Schedule.Shows.Show[i].Title["#text"],
 				jsonObj.Schedule.Shows.Show[i].Theatre["#text"],
 				jsonObj.Schedule.Shows.Show[i].dttmShowStart["#text"],
-				jsonObj.Schedule.Shows.Show[i].Images.EventLargeImagePortrait["#text"]
+				jsonObj.Schedule.Shows.Show[i].Images.EventLargeImagePortrait["#text"],
+				jsonObj.Schedule.Shows.Show[i].ShowURL["#text"]
 			);
 			arrayOfShows.push(newShow); //add show object to array.
 		}
@@ -235,6 +237,7 @@ function fillTable(){ //display table.
 
 			var nodeA = document.createElement("a"); //We need text inside own tag for search function.
 			nodeA.id = "a"+i;
+			nodeA.href = arrayOfShows[i].link;
 			document.getElementById("td1"+i).appendChild(nodeA);
 		}
 		var tooltipSpan = document.getElementsByClassName('tooltip-span');
