@@ -168,13 +168,19 @@ function fillTable(){ //display table.
 			jsonObj.Schedule.Shows.Show = [];
 		}
 
+		/*
+		var string = jsonObj.Schedule.Shows.Show[i].ShowURL["#text"];
+
+		*/
+
 		for (let i = 0; i < jsonObj.Schedule.Shows.Show.length; i++){
+			var newImageUrl = jsonObj.Schedule.Shows.Show[i].Images.EventLargeImagePortrait["#text"].replace("http", "https");
 			var newShow = new show( //create show object.
 				jsonObj.Schedule.Shows.Show[i].ID["#text"],
 				jsonObj.Schedule.Shows.Show[i].Title["#text"],
 				jsonObj.Schedule.Shows.Show[i].Theatre["#text"],
 				jsonObj.Schedule.Shows.Show[i].dttmShowStart["#text"],
-				jsonObj.Schedule.Shows.Show[i].Images.EventLargeImagePortrait["#text"],
+				newImageUrl,
 				jsonObj.Schedule.Shows.Show[i].ShowURL["#text"]
 			);
 			arrayOfShows.push(newShow); //add show object to array.
